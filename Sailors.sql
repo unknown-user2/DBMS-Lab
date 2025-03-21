@@ -91,22 +91,6 @@ where b.bid=r.bid and s.sid=r.sid and age>=40
 group by bid 
 having count(r.sid)>=2;
 
--- A view that shows names and ratings of all sailors sorted by rating in descending order
-create view SailorsSortedByRating as
-select sname, rating 
-from sailors
-order by rating desc;
-
-select * from SailorsSortedByRating;
-
--- Create a view that shows the names of the sailors who have reserved a boat on a given date.
-create view SailorsReservedDate as
-select sname 
-from sailors s, reserves r
-where s.sid=r.sid and sdate="2023-03-06";
-
-select * from SailorsReservedDate;
-
 -- Create a view that shows the names and colours of all the boats that have been reserved by a sailor with a specific rating.
 create view SailorsWithRating5 as
 select distinct bname, color
@@ -128,40 +112,3 @@ end//
 delimiter ;
 
 delete from Boat where bid=103;
-
--- A trigger that prevents sailors with rating less than 3 from reserving a boat.
-delimiter //
-create trigger BlockReservation
-before insert on reserves
-for each row
-begin
-  if exists (select * from sailors where sid=new.sid and rating<3) then
-    signal sqlstate '45000' set message_text = 'Sailor rating less than 3';
-  end if;
-end//
-delimiter ;
-
-insert into reserves values
-(4,2,"2023-10-01");
-
--- A trigger that deletes all expired reservations.
-create table TempTable (
-	last_date date primary key
-); -- Temporary table to be used in DeleteExpiredReservations Table
-
-DELIMITER //
-create trigger DeleteExpiredReservations
-before insert on TempTable
-for each row
-BEGIN
-	delete from reserves where sdate < curdate();
-END//
-
-DELIMITER ;
-
-select * from reserves;
-
-insert into TempTable values
-(curdate());
-
-select * from reserves; 
