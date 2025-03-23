@@ -2,35 +2,32 @@ DROP DATABASE IF EXISTS insurance;
 CREATE DATABASE insurance;
 USE insurance;
 
-CREATE TABLE IF NOT EXISTS person (
-driver_id VARCHAR(255) NOT NULL,
-driver_name TEXT NOT NULL,
-address TEXT NOT NULL,
-PRIMARY KEY (driver_id)
+CREATE TABLE person (
+driver_id VARCHAR(255) PRIMARY KEY,
+driver_name VARCHAR(35) NOT NULL,
+address VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS car (
-reg_no VARCHAR(255) NOT NULL,
-model TEXT NOT NULL,
-c_year INTEGER,
-PRIMARY KEY (reg_no)
+CREATE TABLE car (
+reg_no VARCHAR(255) PRIMARY KEY,
+model VARCHAR(25) NOT NULL,
+c_year INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS accident (
-report_no INTEGER NOT NULL,
+CREATE TABLE accident (
+report_no INTEGER PRIMARY KEY,
 accident_date DATE,
-location TEXT,
-PRIMARY KEY (report_no)
+location VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS owns (
+CREATE TABLE owns (
 driver_id VARCHAR(255) NOT NULL,
 reg_no VARCHAR(255) NOT NULL,
 FOREIGN KEY (driver_id) REFERENCES person(driver_id) ON DELETE CASCADE,
 FOREIGN KEY (reg_no) REFERENCES car(reg_no) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS participated (
+CREATE TABLE participated (
 driver_id VARCHAR(255) NOT NULL,
 reg_no VARCHAR(255) NOT NULL,
 report_no INTEGER NOT NULL,
@@ -76,7 +73,11 @@ INSERT INTO participated VALUES
 ("D444", "KA-21-BD-4728", 54634, 5000),
 ("D222", "KA-09-MA-1234", 65738, 25000);
 
-
+select * from person;
+select * from car;
+select * from accident;
+select * from owns;
+select * from participated;
 
 -- Find the total number of people who owned a car that were involved in accidents in 2021
 select COUNT(driver_id)
@@ -84,10 +85,9 @@ from participated p, accident a
 where p.report_no=a.report_no and a.accident_date like "2021%";
 
 -- Find the number of accident in which cars belonging to smith were involved
-select COUNT(distinct a.report_no)
-from accident a
-where exists 
-(select * from person p, participated ptd where p.driver_id=ptd.driver_id and p.driver_name="Smith" and a.report_no=ptd.report_no);
+select COUNT(a.report_no) as Number_of_Accidents
+from accident a, participated pa, person p
+where p.driver_id=pa.driver_id and a.report_no=pa.report_no and p.driver_name="Smith" ;
 
 -- Add a new accident to the database
 insert into accident values
