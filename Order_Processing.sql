@@ -2,13 +2,13 @@ drop database if exists order_processing;
 create database order_processing;
 use order_processing;
 
-create table if not exists Customers (
+create table Customers (
 	cust_id int primary key,
 	cname varchar(35) not null,
 	city varchar(35) not null
 );
 
-create table if not exists Orders (
+create table Orders (
 	order_id int primary key,
 	odate date not null,
 	cust_id int,
@@ -16,7 +16,7 @@ create table if not exists Orders (
 	foreign key (cust_id) references Customers(cust_id) on delete cascade
 );
 
-create table if not exists Items (
+create table Items (
 	item_id  int primary key,
 	unitprice int not null
 );
@@ -29,12 +29,12 @@ create table if not exists OrderItems (
 	foreign key (item_id) references Items(item_id) on delete cascade
 );
 
-create table if not exists Warehouses (
+create table Warehouses (
 	warehouse_id int primary key,
 	city varchar(35) not null
 );
 
-create table if not exists Shipments (
+create table Shipments (
 	order_id int not null,
 	warehouse_id int not null,
 	ship_date date not null,
@@ -97,7 +97,9 @@ SELECT * FROM Warehouses;
 select order_id,ship_date from Shipments where warehouse_id=0001;
 
 -- List the Warehouse information from which the Customer named "Kumar" was supplied his orders. Produce a listing of Order#, Warehouse#
-select order_id,warehouse_id from Warehouses natural join Shipments where order_id in (select order_id from Orders where cust_id in (Select cust_id from Customers where cname like "%Kumar%"));
+select s.order_id, s.warehouse_id
+from Shipments s, Orders o,Customers c
+where s.order_id = o.order_id and o.cust_id = c.cust_id and cname like "%kumar%";
 
 -- Produce a listing: Cname, #ofOrders, Avg_Order_Amt, where the middle column is the total number of orders by the customer and the last column is the average order amount for that customer. (Use aggregate functions) 
 select cname, COUNT(*) as no_of_orders, AVG(order_amt) as avg_order_amt
