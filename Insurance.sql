@@ -115,7 +115,6 @@ where c.reg_no=p.reg_no;
 select * from CarsInAccident;
 
 -- A trigger that prevents a driver from participating in more than 2 accidents in a given year.
-
 DELIMITER //
 create trigger PreventParticipation
 before insert on participated
