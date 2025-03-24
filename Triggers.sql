@@ -1,4 +1,4 @@
---1
+--1 Company
 -- Create a trigger that prevents a project from being deleted if it is currently being worked by any employee.
 DELIMITER //
 create trigger PreventDelete
@@ -14,7 +14,7 @@ DELIMITER ;
 delete from Project where p_no=241563; -- Will give error 
 
 
---2
+--2 Enrollment
 -- Create a trigger that prevents a student from enrolling in a course if the marks pre_requisit is less than the given threshold 
 DELIMITER //
 create or replace trigger PreventEnrollment
@@ -31,7 +31,7 @@ INSERT INTO Enroll VALUES
 ("01HF235", 002, 5, 5); -- Gives error since marks is less than 10
 
 
---3
+--3 Insurance
 -- A trigger that prevents a driver from participating in more than 2 accidents in a given year.
 DELIMITER //
 create trigger PreventParticipation
@@ -48,7 +48,7 @@ INSERT INTO participated VALUES
 ("D222", "KA-20-AB-4223", 66666, 20000);
 
 
---4
+--4 Order Processing
 -- A tigger that updates order_amount based on quantity and unit price of order_item
 DELIMITER $$
 create trigger UpdateOrderAmt
@@ -66,7 +66,7 @@ INSERT INTO OrderItems VALUES
 (006, 0001, 5); -- This will automatically update the Orders Table also
 
 
---5
+--5 Sailors
 -- Trigger that prevents boats from being deleted if they have active reservation
 delimiter //
 create trigger CheckandDelete
