@@ -9,7 +9,6 @@ BEGIN
 		signal sqlstate '45000' set message_text='This project has an employee assigned';
 	END IF;
 END; //
-
 DELIMITER ;
 
 delete from Project where p_no=241563; -- Will give error 
@@ -26,7 +25,6 @@ BEGIN
 		signal sqlstate '45000' set message_text='Marks below threshold';
 	END IF;
 END;//
-
 DELIMITER ;
 
 INSERT INTO Enroll VALUES
