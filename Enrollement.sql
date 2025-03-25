@@ -109,8 +109,9 @@ WHERE c.course=b.course AND t.bookIsbn=b.bookIsbn AND t.publisher='PEARSON';
 
 
 -- List the students who have scored maximum marks in ‘DBMS’ course.
-select name from Student s, Enroll e, Course c
-where s.regno=e.regno and e.course=c.course and c.cname="DBMS" and e.marks in 
+select name 
+from Student s, Enroll e
+where s.regno=e.regno and e.marks in 
 (select max(marks) 
 from Enroll e1, Course c1 
 where c1.cname="DBMS" and c1.course=e1.course);
