@@ -64,7 +64,7 @@ where bid=103);
 -- Find the names of the sailor who have not reserved a boat whose name contains the string "storm". Order the name in the ascending order
 select sname 
 from Sailors s
-where not exists
+where sname not in
 (select sname 
 from reserves r
 where s.sid=r.sid)
