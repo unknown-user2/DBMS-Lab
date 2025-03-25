@@ -114,13 +114,13 @@ delete from Orders where cust_id = (select cust_id from Customers where cname li
 select max(unitprice) from Items;
 
 -- A tigger that updates order_amount based on quantity and unit price of order_item
-DELIMITER $$
+DELIMITER //
 create trigger UpdateOrderAmt
 after insert on OrderItems
 for each row
 BEGIN
 	update Orders set order_amt=(new.qty*(select distinct unitprice from Items NATURAL JOIN OrderItems where item_id=new.item_id)) where Orders.order_id=new.order_id;
-END; $$
+END//
 DELIMITER ;
 
 INSERT INTO Orders VALUES
