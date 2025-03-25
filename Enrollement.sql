@@ -73,7 +73,7 @@ INSERT INTO BookAdoption VALUES
 (002, 6, 532678),
 (003, 3, 453723),
 (004, 3, 278345),
-(001, 6, 426784);
+(005, 6, 426784);
 
 select * from Student;
 select * from Course;
@@ -93,55 +93,46 @@ insert into BookAdoption values
 
 -- Produce a list of text books (include Course #, Book-ISBN, Book-title) in the alphabetical order for courses offered by the ‘CS’ department that use more than two books.
 SELECT c.course,t.bookIsbn,t.book_title
-     FROM Course c,BookAdoption ba,TextBook t
-     WHERE c.course=ba.course
-     AND ba.bookIsbn=t.bookIsbn
-     AND c.dept='CS'
-     AND 2<(
-     SELECT COUNT(bookIsbn)
-     FROM BookAdoption b
-     WHERE c.course=b.course)
-     ORDER BY t.book_title;
+FROM Course c,BookAdoption ba,TextBook t
+WHERE c.course=ba.course AND ba.bookIsbn=t.bookIsbn AND c.dept='CS'
+AND (
+SELECT COUNT(bookIsbn)
+FROM BookAdoption b
+WHERE c.course=b.course)>2
+ORDER BY t.book_title;
 
 
 -- List any department that has all its adopted books published by a specific publisher.
-SELECT DISTINCT c.dept
-     FROM Course c
-     WHERE c.dept IN
-     ( SELECT c.dept
-     FROM Course c,BookAdoption b,TextBook t
-     WHERE c.course=b.course
-     AND t.bookIsbn=b.bookIsbn
-     AND t.publisher='PEARSON')
-     AND c.dept NOT IN
-     ( SELECT c.dept
-     FROM Course c, BookAdoption b, TextBook t
-     WHERE c.course=b.course
-     AND t.bookIsbn=b.bookIsbn
-     AND t.publisher!='PEARSON');
+SELECT dept, c.course
+FROM Course c, BookAdoption b,TextBook t
+WHERE c.course=b.course AND t.bookIsbn=b.bookIsbn AND t.publisher='PEARSON';
+
 
 -- List the students who have scored maximum marks in ‘DBMS’ course.
 select name from Student s, Enroll e, Course c
-where s.regno=e.regno and e.course=c.course and c.cname="DBMS" and e.marks in (select max(marks) from Enroll e1, Course c1 where c1.cname="DBMS" and c1.course=e1.course);
+where s.regno=e.regno and e.course=c.course and c.cname="DBMS" and e.marks in 
+(select max(marks) 
+from Enroll e1, Course c1 
+where c1.cname="DBMS" and c1.course=e1.course);
 
 -- Create a view to display all the courses opted by a student along with marks obtained.
 create view CoursesOptedByStudent as
-select c.cname, e.marks from Course c, Enroll e
+select c.cname, e.marks 
+from Course c, Enroll e
 where e.course=c.course and e.regno="01HF235";
 
 select * from CoursesOptedByStudent;
 
 -- Create a trigger that prevents a student from enrolling in a course if the marks pre_requisit is less than the given threshold 
 DELIMITER //
-create or replace trigger PreventEnrollment
+create trigger PreventEnrollment
 before insert on Enroll
 for each row
 BEGIN
 	IF (new.marks<40) THEN
 		signal sqlstate '45000' set message_text='Marks below threshold';
 	END IF;
-END;//
-
+END//
 DELIMITER ;
 
 INSERT INTO Enroll VALUES
