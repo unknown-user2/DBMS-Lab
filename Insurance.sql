@@ -125,7 +125,7 @@ BEGIN
 	IF 2<=(select count(*) from participated where driver_id=new.driver_id) THEN
 		signal sqlstate '45000' set message_text='Driver has already participated in 2 accidents';
 	END IF;
-END;//
+END//
 DELIMITER ;
 
 INSERT INTO participated VALUES
