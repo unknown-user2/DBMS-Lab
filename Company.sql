@@ -135,8 +135,7 @@ BEGIN
 	IF EXISTS (select * from WorksOn where p_no=old.p_no) THEN
 		signal sqlstate '45000' set message_text='This project has an employee assigned';
 	END IF;
-END; //
-
+END//
 DELIMITER ;
 
 delete from Project where p_no=241563; -- Will give error 
