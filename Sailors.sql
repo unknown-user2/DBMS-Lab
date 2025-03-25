@@ -102,7 +102,7 @@ select * from SailorsWithRating5;
 -- Trigger that prevents boats from being deleted if they have active reservation
 delimiter //
 create trigger CheckandDelete
-before delete on boat
+before delete on Boat
 for each row
 begin
   if exists (select * from reserves r where r.bid = old.bid) then
