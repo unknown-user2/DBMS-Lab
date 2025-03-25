@@ -104,7 +104,9 @@ where model="Mazda" and reg_no in
 
 
 -- Update the damage amount for the car with reg_no of KA-09-MA-1234 in the accident with report_no 65738
-update participated set damage_amount=10000 where report_no=65738 and reg_no="KA-09-MA-1234";
+update participated 
+set damage_amount=10000 
+where report_no=65738 and reg_no="KA-09-MA-1234";
 
 -- View that shows models and years of car that are involved in accident
 create view CarsInAccident as
