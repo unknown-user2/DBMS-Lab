@@ -8,7 +8,7 @@ BEGIN
 	IF EXISTS (select * from WorksOn where p_no=old.p_no) THEN
 		signal sqlstate '45000' set message_text='This project has an employee assigned';
 	END IF;
-END; //
+END//
 DELIMITER ;
 
 delete from Project where p_no=241563; -- Will give error 
@@ -41,7 +41,7 @@ BEGIN
 	IF 2<=(select count(*) from participated where driver_id=new.driver_id) THEN
 		signal sqlstate '45000' set message_text='Driver has already participated in 2 accidents';
 	END IF;
-END;//
+END//
 DELIMITER ;
 
 INSERT INTO participated VALUES
@@ -50,13 +50,13 @@ INSERT INTO participated VALUES
 
 --4 Order Processing
 -- A tigger that updates order_amount based on quantity and unit price of order_item
-DELIMITER $$
+DELIMITER //
 create trigger UpdateOrderAmt
 after insert on OrderItems
 for each row
 BEGIN
 	update Orders set order_amt=(new.qty*(select distinct unitprice from Items NATURAL JOIN OrderItems where item_id=new.item_id)) where Orders.order_id=new.order_id;
-END; $$
+END//
 DELIMITER ;
 
 INSERT INTO Orders VALUES
